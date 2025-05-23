@@ -306,7 +306,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
+}
         
         .album-art-placeholder {
             display: flex;
@@ -1261,8 +1261,8 @@
                     
                     // Save audio file to IndexedDB if it's a File object
                     if (trackToSave.audioFile instanceof File) {
-                        const audioDataUrl = await readFileAsDataURL(trackToSave.audioFile);
-                        trackToSave.audio = audioDataUrl;
+                        const audioBlob = await readFileAsBlob(trackToSave.audioFile);
+                        trackToSave.audioBlob = audioBlob;
                         delete trackToSave.audioFile;
                     }
                     
@@ -1290,13 +1290,16 @@
                 }
             }
 
-            // Helper function to read file as Data URL
-            function readFileAsDataURL(file) {
+            // Helper function to read file as Blob
+            function readFileAsBlob(file) {
                 return new Promise((resolve, reject) => {
                     const reader = new FileReader();
-                    reader.onload = () => resolve(reader.result);
+                    reader.onload = () => {
+                        const blob = new Blob([reader.result], { type: file.type });
+                        resolve(blob);
+                    };
                     reader.onerror = reject;
-                    reader.readAsDataURL(file);
+                    reader.readAsArrayBuffer(file);
                 });
             }
 
@@ -1385,13 +1388,12 @@
                                 currentTrackIndex = parseInt(lastTrackIndex);
                                 currentTrack = {...playlist[currentTrackIndex]};
                                 
-                                // Create blob URL for audio if it's a data URL
-                                if (currentTrack.audio && currentTrack.audio.startsWith('data:audio')) {
-                                    const audioBlob = dataURItoBlob(currentTrack.audio);
-                                    currentTrack.audio = URL.createObjectURL(audioBlob);
+                                // Create blob URL for audio if available
+                                if (currentTrack.audioBlob) {
+                                    currentTrack.audio = URL.createObjectURL(currentTrack.audioBlob);
                                 }
                                 
-                                audioPlayer.src = currentTrack.audio;
+                                audioPlayer.src = currentTrack.audio || '';
                                 updatePlayerInfo();
                                 
                                 // Try to restore playback position
@@ -1557,13 +1559,12 @@
                         currentTrackIndex = playlist.length - 1;
                         currentTrack = {...savedTrack};
                         
-                        // Create blob URL for audio if it's a data URL
-                        if (currentTrack.audio && currentTrack.audio.startsWith('data:audio')) {
-                            const audioBlob = dataURItoBlob(currentTrack.audio);
-                            currentTrack.audio = URL.createObjectURL(audioBlob);
+                        // Create blob URL for audio if available
+                        if (currentTrack.audioBlob) {
+                            currentTrack.audio = URL.createObjectURL(currentTrack.audioBlob);
                         }
                         
-                        audioPlayer.src = currentTrack.audio;
+                        audioPlayer.src = currentTrack.audio || '';
                         
                         // Play the new track
                         playTrack();
@@ -1760,45 +1761,43 @@
                         // Остановить текущее воспроизведение
                         audioPlayer.pause();
                         
-                        // Создать новый Blob URL для аудио
-                        if (currentTrack.audio && currentTrack.audio.startsWith('data:audio')) {
-                            const audioBlob = dataURItoBlob(currentTrack.audio);
-                            currentTrack.audio = URL.createObjectURL(audioBlob);
+                        // Создать новый Blob URL для аудио, если он еще не создан
+                        if (currentTrack.audioBlob && !currentTrack.audio) {
+                            currentTrack.audio = URL.createObjectURL(currentTrack.audioBlob);
                         }
                         
                         // Установить новый источник
-                        audioPlayer.src = currentTrack.audio;
+                        audioPlayer.src = currentTrack.audio || '';
                         
-                        // Загрузить метаданные
-                        await new Promise((resolve, reject) => {
-                            audioPlayer.onloadedmetadata = resolve;
-                            audioPlayer.onerror = reject;
-                        });
+                        // Проверить, что аудио доступно
+                        if (!audioPlayer.src) {
+                            throw new Error('Аудиофайл не найден');
+                        }
                         
+                        // Обновить информацию о треке
                         updatePlayerInfo();
-                        playTrack();
+                        
+                        // Попробовать воспроизвести
+                        await audioPlayer.play();
+                        
+                        // Обновить состояние кнопки
+                        playIcon.className = 'ri-pause-line';
+                        isPlaying = true;
+                        
+                        // Закрыть модальное окно плейлиста
                         playlistModal.classList.remove('active');
+                        
+                        // Сохранить состояние
                         await savePlaylistToStorage();
                     }
                 } catch (error) {
                     console.error('Error playing track:', error);
                     showNotification('Ошибка при воспроизведении трека: ' + error.message, 'error');
+                    
+                    // Если произошла ошибка, сбросить состояние
+                    playIcon.className = 'ri-play-line';
+                    isPlaying = false;
                 }
-            }
-
-
-            // Helper function to convert data URI to Blob
-            function dataURItoBlob(dataURI) {
-                const byteString = atob(dataURI.split(',')[1]);
-                const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-                const ab = new ArrayBuffer(byteString.length);
-                const ia = new Uint8Array(ab);
-                
-                for (let i = 0; i < byteString.length; i++) {
-                    ia[i] = byteString.charCodeAt(i);
-                }
-                
-                return new Blob([ab], { type: mimeString });
             }
 
             // Player Controls
@@ -1814,24 +1813,27 @@
                 }
             }
 
-            function playTrack() {
-                if (audioPlayer.src && audioPlayer.src !== '') {
-                    audioPlayer.play()
-                        .then(() => {
-                            playIcon.className = 'ri-pause-line';
-                            isPlaying = true;
-                            savePlaylistToStorage();
-                        })
-                        .catch(error => {
-                            console.error('Error playing audio:', error);
-                            showNotification('Ошибка воспроизведения: ' + error.message, 'error');
-                        });
-                } else {
-                    if (playlist.length > 0) {
-                        playTrackFromPlaylist(0);
-                    } else {
-                        showNotification('Нет треков для воспроизведения', 'error');
+            async function playTrack() {
+                try {
+                    if (!audioPlayer.src && playlist.length > 0) {
+                        // Если нет текущего трека, но есть плейлист, начать с первого трека
+                        await playTrackFromPlaylist(0);
+                        return;
                     }
+                    
+                    if (!audioPlayer.src) {
+                        throw new Error('Нет треков для воспроизведения');
+                    }
+                    
+                    await audioPlayer.play();
+                    playIcon.className = 'ri-pause-line';
+                    isPlaying = true;
+                    await savePlaylistToStorage();
+                } catch (error) {
+                    console.error('Error playing audio:', error);
+                    showNotification('Ошибка воспроизведения: ' + error.message, 'error');
+                    playIcon.className = 'ri-play-line';
+                    isPlaying = false;
                 }
             }
 
@@ -1882,12 +1884,13 @@
             function updateProgressBar() {
                 const duration = audioPlayer.duration;
                 const currentTime = audioPlayer.currentTime;
-                const progressPercent = (currentTime / duration) * 100;
-                progressBar.style.width = `${progressPercent}%`;
                 
-                // Update time display
-                document.getElementById('currentTime').textContent = formatTime(currentTime);
-                if (!isNaN(duration)) {
+                if (isFinite(duration)) {
+                    const progressPercent = (currentTime / duration) * 100;
+                    progressBar.style.width = `${progressPercent}%`;
+                    
+                    // Update time display
+                    document.getElementById('currentTime').textContent = formatTime(currentTime);
                     document.getElementById('durationTime').textContent = formatTime(duration);
                 }
             }
@@ -1896,10 +1899,15 @@
                 const width = this.clientWidth;
                 const clickX = e.offsetX;
                 const duration = audioPlayer.duration;
-                audioPlayer.currentTime = (clickX / width) * duration;
+                
+                if (isFinite(duration)) {
+                    audioPlayer.currentTime = (clickX / width) * duration;
+                }
             }
 
             function formatTime(seconds) {
+                if (isNaN(seconds)) return '0:00';
+                
                 const minutes = Math.floor(seconds / 60);
                 const secs = Math.floor(seconds % 60);
                 return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
