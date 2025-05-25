@@ -1299,8 +1299,9 @@
             });
             
             // Yandex Disk API integration
-            const YANDEX_CLIENT_ID = 'your_client_id'; // Replace with your Yandex OAuth client ID
-            const YANDEX_REDIRECT_URI = window.location.href.split('?')[0]; // Current page URL
+            // Замените на ваш реальный Client ID из Яндекс.OAuth
+            const YANDEX_CLIENT_ID = 'e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0'; 
+            const YANDEX_REDIRECT_URI = window.location.origin + window.location.pathname;
             const YANDEX_AUTH_URL = `https://oauth.yandex.ru/authorize?response_type=token&client_id=${YANDEX_CLIENT_ID}&redirect_uri=${encodeURIComponent(YANDEX_REDIRECT_URI)}`;
             
             let yandexToken = localStorage.getItem('yandexToken');
@@ -1323,6 +1324,10 @@
                     authModal.classList.remove('active');
                     
                     showNotification('Успешная авторизация Яндекс.Диск', 'success');
+                    
+                    // Загружаем треки после успешной авторизации
+                    loadPlaylistFromStorage();
+                    
                     return true;
                 }
                 return false;
@@ -1330,11 +1335,20 @@
             
             // Initialize Yandex auth
             function initYandexAuth() {
+                // Проверяем токен в URL (если пользователь вернулся после авторизации)
                 if (checkForTokenInUrl()) {
                     return;
                 }
                 
+                // Если токен уже есть в localStorage, просто используем его
+                if (yandexToken) {
+                    authModal.classList.remove('active');
+                    return;
+                }
+                
+                // Настраиваем кнопку авторизации
                 yandexAuthBtn.addEventListener('click', () => {
+                    // Перенаправляем пользователя на страницу авторизации Яндекс
                     window.location.href = YANDEX_AUTH_URL;
                 });
             }
