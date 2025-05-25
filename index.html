@@ -225,7 +225,13 @@
             opacity: 0.7;
             transition: all 0.2s ease;
         }
-        .telegram-icon:hover {
+        .discord-icon {
+            color: #5865F2;
+            font-size: 20px;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+        }
+        .telegram-icon:hover, .discord-icon:hover {
             opacity: 1;
             transform: translateX(2px);
         }
@@ -296,6 +302,7 @@
         .album-art {
             width: 80px;
             height: 80px;
+            min-width: 80px;
             border-radius: 8px;
             background: linear-gradient(135deg, #333, #444);
             overflow: hidden;
@@ -306,7 +313,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-}
+        }
         
         .album-art-placeholder {
             display: flex;
@@ -321,6 +328,7 @@
         .track-info {
             flex-grow: 1;
             min-width: 0;
+            overflow: hidden;
         }
         
         .track-name {
@@ -331,12 +339,23 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            animation: scrollText 10s linear infinite;
+            display: inline-block;
+            padding-left: 100%;
+        }
+        
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
         }
         
         .track-artist {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.7);
             margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .player-controls {
@@ -392,7 +411,8 @@
         
         .progress-bar {
             height: 100%;
-            width: 30%;
+            width: 0%;
+;
             background: linear-gradient(90deg, #4d0099, #8000ff);
             border-radius: 2px;
             position: relative;
@@ -432,6 +452,7 @@
             width: 100%;
             height: 4px;
             -webkit-appearance: none;
+            appearance: none;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
             outline: none;
@@ -439,6 +460,7 @@
         
         .volume-slider input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
+            appearance: none;
             width: 14px;
             height: 14px;
             border-radius: 50%;
@@ -529,9 +551,16 @@
             border: 2px solid rgba(77, 0, 153, 0.5);
         }
         
+        .playlist-item-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
         .playlist-item-info {
             flex-grow: 1;
             min-width: 0;
+            overflow: hidden;
         }
         
         .playlist-item-name {
@@ -718,7 +747,7 @@
             margin-bottom: 5px;
         }
         
-        .editor-preview-artist {
+        .editor-p preview-artist {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
         }
@@ -815,6 +844,214 @@
             opacity: 1;
         }
         
+        /* Yandex Disk auth modal */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .auth-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .auth-content {
+            background: #1A1A1A;
+            border: 1px solid #4d0099;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        
+        .auth-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .auth-button {
+            background: rgba(77, 0, 153, 0.7);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 0 auto;
+        }
+        
+        .auth-button:hover {
+            background: rgba(77, 0, 153, 0.9);
+        }
+        
+        /* Admin panel styles */
+        .admin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .admin-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .admin-content {
+            background: #1A1A1A;
+            border: 1px solid #4d0099;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .admin-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .admin-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .admin-close:hover {
+            color: white;
+        }
+        
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .admin-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .admin-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .admin-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(77, 0, 153, 0.5);
+            border-radius: 6px;
+            padding: 10px;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .admin-input:focus {
+            outline: none;
+            border-color: #8000ff;
+        }
+        
+        .admin-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .admin-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        
+        .admin-btn-cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .admin-btn-submit {
+            background: rgba(77, 0, 153, 0.7);
+            color: white;
+            border: 1px solid rgba(77, 0, 153, 0.9);
+        }
+        
+        .admin-btn-submit:hover {
+            background: rgba(77, 0, 153, 0.9);
+        }
+        
+        /* Admin button */
+        .admin-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(77, 0, 153, 0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+        
+        .admin-button:hover {
+            background: rgba(77, 0, 153, 0.9);
+            transform: scale(1.1);
+        }
+        
         @keyframes loading {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
@@ -823,6 +1060,11 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
         }
     </style>
 </head>
@@ -895,6 +1137,34 @@
         </div>
     </div>
 
+    <!-- Admin button -->
+    <div class="admin-button" id="adminButton">
+        <i class="ri-admin-line"></i>
+    </div>
+
+    <!-- Admin panel modal -->
+    <div class="admin-modal" id="adminModal">
+        <div class="admin-content">
+            <div class="admin-title">
+                <i class="ri-admin-line"></i>
+                <span>Панель администратора</span>
+            </div>
+            <i class="ri-close-line admin-close" id="adminClose"></i>
+            
+            <div class="admin-form" id="adminForm">
+                <div class="admin-group">
+                    <label for="adminPassword" class="admin-label">Пароль администратора</label>
+                    <input type="password" id="adminPassword" class="admin-input" placeholder="Введите пароль">
+                </div>
+                
+                <div class="admin-buttons">
+                    <button type="button" class="admin-btn admin-btn-cancel" id="adminCancelBtn">Отмена</button>
+                    <button type="button" class="admin-btn admin-btn-submit" id="adminSubmitBtn">Войти</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="playlist-modal" id="playlistModal">
         <div class="playlist-content">
             <div class="playlist-title">
@@ -913,7 +1183,6 @@
             </button>
         </div>
     </div>
-
     <div class="editor-modal" id="editorModal">
         <div class="editor-content">
             <div class="editor-title">
@@ -959,6 +1228,16 @@
         </div>
     </div>
 
+    <div class="auth-modal" id="authModal">
+        <div class="auth-content">
+            <div class="auth-title">Авторизация Яндекс.Диск</div>
+            <button class="auth-button" id="yandexAuthBtn">
+                <i class="ri-cloud-line"></i>
+                <span>Войти через Яндекс</span>
+            </button>
+        </div>
+    </div>
+
     <div class="notification" id="notification">
         <i class="ri-information-line"></i>
         <span id="notificationMessage">Сообщение</span>
@@ -983,97 +1262,250 @@
                 }, duration);
             }
             
-            // Initialize IndexedDB for storing audio files
-            let db;
-            const DB_NAME = 'MusicPlayerDB';
-            const DB_VERSION = 1;
-            const STORE_NAME = 'tracks';
+            // Admin panel functionality
+            const adminButton = document.getElementById('adminButton');
+            const adminModal = document.getElementById('adminModal');
+            const adminClose = document.getElementById('adminClose');
+            const adminPassword = document.getElementById('adminPassword');
+            const adminSubmitBtn = document.getElementById('adminSubmitBtn');
+            const adminCancelBtn = document.getElementById('adminCancelBtn');
+            const authModal = document.getElementById('authModal');
             
-            function initDB() {
-                return new Promise((resolve, reject) => {
-                    const request = indexedDB.open(DB_NAME, DB_VERSION);
+            const ADMIN_PASSWORD = "DFGHI789dfghi";
+            
+            adminButton.addEventListener('click', () => {
+                adminModal.classList.add('active');
+            });
+            
+            adminClose.addEventListener('click', () => {
+                adminModal.classList.remove('active');
+                adminPassword.value = '';
+            });
+            
+            adminCancelBtn.addEventListener('click', () => {
+                adminModal.classList.remove('active');
+                adminPassword.value = '';
+            });
+            
+            adminSubmitBtn.addEventListener('click', () => {
+                if (adminPassword.value === ADMIN_PASSWORD) {
+                    adminModal.classList.remove('active');
+                    adminPassword.value = '';
+                    authModal.classList.add('active');
+                    showNotification('Доступ разрешен', 'success');
+                } else {
+                    showNotification('Неверный пароль', 'error');
+                }
+            });
+            
+            // Yandex Disk API integration
+            const YANDEX_CLIENT_ID = 'your_client_id'; // Replace with your Yandex OAuth client ID
+            const YANDEX_REDIRECT_URI = window.location.href.split('?')[0]; // Current page URL
+            const YANDEX_AUTH_URL = `https://oauth.yandex.ru/authorize?response_type=token&client_id=${YANDEX_CLIENT_ID}&redirect_uri=${encodeURIComponent(YANDEX_REDIRECT_URI)}`;
+            
+            let yandexToken = localStorage.getItem('yandexToken');
+            const yandexAuthBtn = document.getElementById('yandexAuthBtn');
+            
+            // Check for token in URL (after OAuth redirect)
+            function checkForTokenInUrl() {
+                const hash = window.location.hash.substring(1);
+                const params = new URLSearchParams(hash);
+                const token = params.get('access_token');
+                
+                if (token) {
+                    yandexToken = token;
+                    localStorage.setItem('yandexToken', token);
                     
-                    request.onerror = function(event) {
-                        console.error('Error opening IndexedDB:', event.target.error);
-                        reject(event.target.error);
-                    };
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
                     
-                    request.onsuccess = function(event) {
-                        db = event.target.result;
-                        resolve(db);
-                    };
+                    // Hide auth modal
+                    authModal.classList.remove('active');
                     
-                    request.onupgradeneeded = function(event) {
-                        const db = event.target.result;
-                        if (!db.objectStoreNames.contains(STORE_NAME)) {
-                            db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+                    showNotification('Успешная авторизация Яндекс.Диск', 'success');
+                    return true;
+                }
+                return false;
+            }
+            
+            // Initialize Yandex auth
+            function initYandexAuth() {
+                if (checkForTokenInUrl()) {
+                    return;
+                }
+                
+                yandexAuthBtn.addEventListener('click', () => {
+                    window.location.href = YANDEX_AUTH_URL;
+                });
+            }
+            
+            // Yandex Disk API functions
+            async function uploadToYandexDisk(file, metadata) {
+                if (!yandexToken) {
+                    showNotification('Необходима авторизация Яндекс.Диск', 'error');
+                    authModal.classList.add('active');
+                    return null;
+                }
+                
+                try {
+                    // 1. Create folder for music if not exists
+                    const folderResponse = await fetch('https://cloud-api.yandex.net/v1/disk/resources?path=/MusicPlayer', {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `OAuth ${yandexToken}`,
+                            'Content-Type': 'application/json'
                         }
+                    });
+                    
+                    if (!folderResponse.ok && folderResponse.status !== 409) { // 409 = folder already exists
+                        throw new Error('Failed to create folder');
+                    }
+                    
+                    // 2. Get upload URL
+                    const fileName = `${metadata.id}_${file.name}`;
+                    const uploadUrlResponse = await fetch(`https://cloud-api.yandex.net/v1/disk/resources/upload?path=/MusicPlayer/${encodeURIComponent(fileName)}&overwrite=true`, {
+                        headers: {
+                            'Authorization': `OAuth ${yandexToken}`
+                        }
+                    });
+                    
+                    if (!uploadUrlResponse.ok) {
+                        throw new Error('Failed to get upload URL');
+                    }
+                    
+                    const uploadData = await uploadUrlResponse.json();
+                    
+                    // 3. Upload file
+                    const uploadResponse = await fetch(uploadData.href, {
+                        method: 'PUT',
+                        body: file
+                    });
+                    
+                    if (!uploadResponse.ok) {
+                        throw new Error('File upload failed');
+                    }
+                    
+                    // 4. Save metadata
+                    const metadataResponse = await fetch('https://cloud-api.yandex.net/v1/disk/resources', {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `OAuth ${yandexToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            path: `/MusicPlayer/${fileName}`,
+                            custom_properties: {
+                                musicMetadata: JSON.stringify(metadata)
+                            }
+                        })
+                    });
+                    
+                    if (!metadataResponse.ok) {
+                        throw new Error('Metadata update failed');
+                    }
+                    
+                    // Return file info
+                    return {
+                        id: metadata.id,
+                        name: fileName,
+                        path: `/MusicPlayer/${fileName}`,
+                        url: `https://cloud-api.yandex.net/v1/disk/resources/download?path=/MusicPlayer/${encodeURIComponent(fileName)}`,
+                        metadata: metadata
                     };
-                });
+                } catch (error) {
+                    console.error('Yandex Disk upload error:', error);
+                    showNotification('Ошибка загрузки на Яндекс.Диск: ' + error.message, 'error');
+                    return null;
+                }
             }
             
-            // Save track to IndexedDB
-            async function saveTrackToDB(track) {
-                if (!db) await initDB();
+            async function getYandexDiskFiles() {
+                if (!yandexToken) {
+                    return [];
+                }
                 
-                return new Promise((resolve, reject) => {
-                    const transaction = db.transaction([STORE_NAME], 'readwrite');
-                    const store = transaction.objectStore(STORE_NAME);
+                try {
+                    const response = await fetch('https://cloud-api.yandex.net/v1/disk/resources?path=/MusicPlayer', {
+                        headers: {
+                            'Authorization': `OAuth ${yandexToken}`
+                        }
+                    });
                     
-                    const request = store.put(track);
+                    if (!response.ok) {
+                        throw new Error('Failed to get files list');
+                    }
                     
-                    request.onsuccess = function() {
-                        resolve(track);
-                    };
+                    const data = await response.json();
                     
-                    request.onerror = function(event) {
-                        console.error('Error saving track to IndexedDB:', event.target.error);
-                        reject(event.target.error);
-                    };
-                });
+                    if (!data._embedded || !data._embedded.items) {
+                        return [];
+                    }
+                    
+                    // Filter for music files and get metadata
+                    const musicFiles = data._embedded.items.filter(item => 
+                        item.mime_type && item.mime_type.startsWith('audio/')
+                    );
+                    
+                    // Get metadata for each file
+                    const tracks = [];
+                    for (const file of musicFiles) {
+                        try {
+                            const metaResponse = await fetch(`https://cloud-api.yandex.net/v1/disk/resources?path=${encodeURIComponent(file.path)}`, {
+                                headers: {
+                                    'Authorization': `OAuth ${yandexToken}`
+                                }
+                            });
+                            
+                            if (metaResponse.ok) {
+                                const metaData = await metaResponse.json();
+                                if (metaData.custom_properties && metaData.custom_properties.musicMetadata) {
+                                    const metadata = JSON.parse(metaData.custom_properties.musicMetadata);
+                                    tracks.push({
+                                        ...metadata,
+                                        yandexPath: file.path,
+                                        yandexUrl: `https://cloud-api.yandex.net/v1/disk/resources/download?path=${encodeURIComponent(file.path)}`
+                                    });
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Error getting metadata for file:', file.name, error);
+                        }
+                    }
+                    
+                    return tracks;
+                } catch (error) {
+                    console.error('Yandex Disk files fetch error:', error);
+                    showNotification('Ошибка получения файлов с Яндекс.Диск', 'error');
+                    return [];
+                }
             }
             
-            // Get track from IndexedDB
-            async function getTrackFromDB(trackId) {
-                if (!db) await initDB();
+            async function getYandexFileDownloadUrl(filePath) {
+                if (!yandexToken) {
+                    return null;
+                }
                 
-                return new Promise((resolve, reject) => {
-                    const transaction = db.transaction([STORE_NAME], 'readonly');
-                    const store = transaction.objectStore(STORE_NAME);
+                try {
+                    const response = await fetch(`https://cloud-api.yandex.net/v1/disk/resources/download?path=${encodeURIComponent(filePath)}`, {
+                        headers: {
+                            'Authorization': `OAuth ${yandexToken}`
+                        }
+                    });
                     
-                    const request = store.get(trackId);
+                    if (!response.ok) {
+                        throw new Error('Failed to get download URL');
+                    }
                     
-                    request.onsuccess = function() {
-                        resolve(request.result);
-                    };
-                    
-                    request.onerror = function(event) {
-                        console.error('Error getting track from IndexedDB:', event.target.error);
-                        reject(event.target.error);
-                    };
-                });
+                    const data = await response.json();
+                    return data.href;
+                } catch (error) {
+                    console.error('Error getting download URL:', error);
+                    return null;
+                }
             }
             
-            // Delete track from IndexedDB
-            async function deleteTrackFromDB(trackId) {
-                if (!db) await initDB();
-                
-                return new Promise((resolve, reject) => {
-                    const transaction = db.transaction([STORE_NAME], 'readwrite');
-                    const store = transaction.objectStore(STORE_NAME);
-                    
-                    const request = store.delete(trackId);
-                    
-                    request.onsuccess = function() {
-                        resolve(true);
-                    };
-                    
-                    request.onerror = function(event) {
-                        console.error('Error deleting track from IndexedDB:', event.target.error);
-                        reject(event.target.error);
-                    };
-                });
-            }
+            // Initialize Yandex auth
+            initYandexAuth();
             
             // Friends list functionality
             const friendsButton = document.getElementById('friendsButton');
@@ -1094,14 +1526,27 @@
                 { username: 'cCaiOory', name: '@cCaiOory' },
                 { username: 'ivan_furry', name: '@ivan_furry' },
                 { username: 'Anomalysvere', name: '@Anomalysvere' },
-                { username: 'Gio_The_Great_God', name: '@Gio_The_Great_God' }
+                { username: 'Gio_The_Great_God', name: '@Gio_The_Great_God' },
+                { 
+                    username: 'justneo2.0', 
+                    name: 'justneo2.0', 
+                    discordId: '1067772767690293248',
+                    isDiscord: true 
+                }
             ];
 
             function createFriendItem(friend) {
                 const initial = friend.username.charAt(0).toUpperCase();
                 const item = document.createElement('a');
-                item.href = `https://t.me/${friend.username}`;
-                item.target = '_blank';
+                
+                if (friend.isDiscord) {
+                    item.href = `https://discord.com/users/${friend.discordId}`;
+                    item.target = '_blank';
+                } else {
+                    item.href = `https://t.me/${friend.username}`;
+                    item.target = '_blank';
+                }
+                
                 item.className = 'friend-item';
                 item.dataset.username = friend.username;
                 item.dataset.initial = initial;
@@ -1111,21 +1556,36 @@
                         <div class="avatar-initial">${initial}</div>
                     </div>
                     <span class="username">${friend.name}</span>
-                    <i class="ri-telegram-line telegram-icon"></i>
+                    ${friend.isDiscord ? 
+                        '<i class="ri-discord-line discord-icon"></i>' : 
+                        '<i class="ri-telegram-line telegram-icon"></i>'}
                 `;
                 
                 return item;
             }
 
             // Function to load user avatar with cache busting
-            async function loadUserAvatar(username) {
+            async function loadUserAvatar(username, isDiscord = false) {
                 const avatarElement = document.getElementById(`avatar-${username}`);
                 if (!avatarElement) return;
                 
                 try {
                     // Add timestamp to URL to prevent caching
                     const timestamp = new Date().getTime();
-                    const avatarUrl = `https://unavatar.io/telegram/${username}?${timestamp}`;
+                    
+                    let avatarUrl;
+                    if (isDiscord) {
+                        // For Discord users, use their Discord ID
+                        const friend = friends.find(f => f.username === username && f.isDiscord);
+                        if (friend && friend.discordId) {
+                            avatarUrl = `https://cdn.discordapp.com/avatars/${friend.discordId}/a_${Math.random().toString(36).substring(2, 15)}.png?${timestamp}`;
+                        } else {
+                            throw new Error('Discord ID not found');
+                        }
+                    } else {
+                        // For Telegram users
+                        avatarUrl = `https://unavatar.io/telegram/${username}?${timestamp}`;
+                    }
                     
                     const img = new Image();
                     img.onload = function() {
@@ -1146,7 +1606,7 @@
             // Function to refresh all avatars
             function refreshAllAvatars() {
                 friends.forEach(friend => {
-                    loadUserAvatar(friend.username);
+                    loadUserAvatar(friend.username, friend.isDiscord);
                 });
             }
 
@@ -1156,7 +1616,7 @@
                 
                 // Load avatar with random delay to prevent rate limiting
                 setTimeout(() => {
-                    loadUserAvatar(friend.username);
+                    loadUserAvatar(friend.username, friend.isDiscord);
                 }, Math.random() * 1000);
             });
 
@@ -1226,18 +1686,12 @@
                 artist: 'Исполнитель',
                 cover: null,
                 audio: null,
-                audioFile: null
+                yandexPath: null
             };
 
             let playlist = [];
             let currentTrackIndex = -1;
             let newTrackBeingEdited = null;
-
-            // Initialize IndexedDB
-            initDB().catch(error => {
-                console.error('Failed to initialize IndexedDB:', error);
-                showNotification('Ошибка инициализации базы данных', 'error');
-            });
 
             // Generate unique ID for tracks
             function generateId() {
@@ -1248,104 +1702,66 @@
                 });
             }
 
-            // Save track data to localStorage and IndexedDB
-            async function saveTrackToStorage(track) {
+            // Save track data to Yandex Disk
+            async function saveTrackToYandex(track, audioFile) {
                 try {
                     // Generate unique ID if not exists
                     if (!track.id) {
                         track.id = generateId();
                     }
                     
-                    // Clone track to avoid modifying the original
-                    const trackToSave = JSON.parse(JSON.stringify(track));
+                    // Upload to Yandex Disk
+                    const uploadResult = await uploadToYandexDisk(audioFile, {
+                        id: track.id,
+                        name: track.name,
+                        artist: track.artist,
+                        cover: track.cover
+                    });
                     
-                    // Save audio file to IndexedDB if it's a File object
-                    if (trackToSave.audioFile instanceof File) {
-                        const audioBlob = await readFileAsBlob(trackToSave.audioFile);
-                        trackToSave.audioBlob = audioBlob;
-                        delete trackToSave.audioFile;
+                    if (!uploadResult) {
+                        throw new Error('Upload failed');
                     }
                     
-                    // Save to localStorage (metadata only)
-                    const tracks = JSON.parse(localStorage.getItem('musicPlayerTracks') || '[]');
-                    
-                    // Check if track already exists
-                    const existingIndex = tracks.findIndex(t => t.id === trackToSave.id);
-                    if (existingIndex !== -1) {
-                        tracks[existingIndex] = trackToSave;
-                    } else {
-                        tracks.push(trackToSave);
-                    }
-                    
-                    localStorage.setItem('musicPlayerTracks', JSON.stringify(tracks));
-                    
-                    // Save full track to IndexedDB
-                    await saveTrackToDB(trackToSave);
-                    
-                    return trackToSave;
+                    return {
+                        ...track,
+                        yandexPath: uploadResult.path,
+                        yandexUrl: uploadResult.url
+                    };
                 } catch (error) {
-                    console.error('Error saving track:', error);
-                    showNotification('Ошибка при сохранении трека', 'error');
+                    console.error('Error saving track to Yandex Disk:', error);
+                    showNotification('Ошибка сохранения трека на Яндекс.Диск', 'error');
                     return null;
                 }
             }
 
-            // Helper function to read file as Blob
-            function readFileAsBlob(file) {
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        const blob = new Blob([reader.result], { type: file.type });
-                        resolve(blob);
-                    };
-                    reader.onerror = reject;
-                    reader.readAsArrayBuffer(file);
-                });
-            }
-
-            // Load tracks from localStorage and IndexedDB
-            async function loadTracksFromStorage() {
+            // Load tracks from Yandex Disk
+            async function loadTracksFromYandex() {
                 try {
-                    const tracks = JSON.parse(localStorage.getItem('musicPlayerTracks') || '[]');
-                    
-                    // For each track, try to load audio from IndexedDB
-                    const loadedTracks = [];
-                    for (const track of tracks) {
-                        try {
-                            const dbTrack = await getTrackFromDB(track.id);
-                            if (dbTrack) {
-                                loadedTracks.push(dbTrack);
-                            } else {
-                                // If not in IndexedDB, keep the track but it won't have audio
-                                loadedTracks.push(track);
-                            }
-                        } catch (error) {
-                            console.error('Error loading track from IndexedDB:', error);
-                            loadedTracks.push(track);
-                        }
-                    }
-                    
-                    return loadedTracks;
+                    const tracks = await getYandexDiskFiles();
+                    return tracks;
                 } catch (error) {
-                    console.error('Error loading tracks:', error);
+                    console.error('Error loading tracks from Yandex Disk:', error);
                     return [];
                 }
             }
 
-            // Remove track from storage
-            async function removeTrackFromStorage(trackId) {
+            // Remove track from Yandex Disk
+            async function removeTrackFromYandex(track) {
+                if (!track.yandexPath || !yandexToken) {
+                    return false;
+                }
+                
                 try {
-                    // Remove from localStorage
-                    const tracks = JSON.parse(localStorage.getItem('musicPlayerTracks') || '[]');
-                    const updatedTracks = tracks.filter(t => t.id !== trackId);
-                    localStorage.setItem('musicPlayerTracks', JSON.stringify(updatedTracks));
+                    const response = await fetch(`https://cloud-api.yandex.net/v1/disk/resources?path=${encodeURIComponent(track.yandexPath)}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `OAuth ${yandexToken}`
+                        }
+                    });
                     
-                    // Remove from IndexedDB
-                    await deleteTrackFromDB(trackId);
-                    
-                    return true;
+                    return response.ok;
                 } catch (error) {
-                    console.error('Error removing track:', error);
+                    console.error('Error removing track from Yandex Disk:', error);
                     return false;
                 }
             }
@@ -1365,52 +1781,64 @@
                 }
             }
 
-            // Load playlist from localStorage
+            // Load playlist from localStorage and Yandex Disk
             async function loadPlaylistFromStorage() {
                 try {
+                    // Load from Yandex Disk first
+                    const yandexTracks = await loadTracksFromYandex();
+                    
+                    // Then load from localStorage
                     const savedPlaylist = localStorage.getItem('musicPlayerPlaylist');
                     if (savedPlaylist) {
                         playlist = JSON.parse(savedPlaylist);
                         
-                        // Load all tracks from storage to match with playlist
-                        const allTracks = await loadTracksFromStorage();
-                        
-                        // Update playlist with full track data
-                        playlist = playlist.map(track => {
-                            const fullTrack = allTracks.find(t => t.id === track.id);
-                            return fullTrack || track;
-                        }).filter(track => track); // Remove undefined tracks
-                        
-                        if (playlist.length > 0) {
-                            // Load last played track
-                            const lastTrackIndex = localStorage.getItem('lastTrackIndex');
-                            if (lastTrackIndex !== null && playlist[lastTrackIndex]) {
-                                currentTrackIndex = parseInt(lastTrackIndex);
-                                currentTrack = {...playlist[currentTrackIndex]};
-                                
-                                // Create blob URL for audio if available
-                                if (currentTrack.audioBlob) {
-                                    currentTrack.audio = URL.createObjectURL(currentTrack.audioBlob);
+                        // Merge with Yandex tracks (prefer Yandex versions)
+                        yandexTracks.forEach(yandexTrack => {
+                            const existingIndex = playlist.findIndex(t => t.id === yandexTrack.id);
+                            if (existingIndex !== -1) {
+                                playlist[existingIndex] = yandexTrack;
+                            } else {
+                                playlist.push(yandexTrack);
+                            }
+                        });
+                    } else {
+                        // If no saved playlist, use Yandex tracks
+                        playlist = yandexTracks;
+                    }
+                    
+                    if (playlist.length > 0) {
+                        // Load last played track
+                        const lastTrackIndex = localStorage.getItem('lastTrackIndex');
+                        if (lastTrackIndex !== null && playlist[lastTrackIndex]) {
+                            currentTrackIndex = parseInt(lastTrackIndex);
+                            currentTrack = {...playlist[currentTrackIndex]};
+                            
+                            // Get download URL for audio
+                            if (currentTrack.yandexPath) {
+                                const audioUrl = await getYandexFileDownloadUrl(currentTrack.yandexPath);
+                                if (audioUrl) {
+                                    currentTrack.audio = audioUrl;
                                 }
-                                
-                                audioPlayer.src = currentTrack.audio || '';
-                                updatePlayerInfo();
-                                
-                                // Try to restore playback position
-                                const savedTime = localStorage.getItem('lastPlaybackTime');
-                                const savedIsPlaying = localStorage.getItem('isPlaying');
-                                
-                                if (savedTime) {
-                                    setTimeout(() => {
-                                        audioPlayer.currentTime = parseFloat(savedTime);
-                                        if (savedIsPlaying === 'true') {
-                                            playTrack();
-                                        }
-                                    }, 100);
-                                }
+                            }
+                            
+                            audioPlayer.src = currentTrack.audio || '';
+                            updatePlayerInfo();
+                            
+                            // Try to restore playback position
+                            const savedTime = localStorage.getItem('lastPlaybackTime');
+                            const savedIsPlaying = localStorage.getItem('isPlaying');
+                            
+                            if (savedTime) {
+                                setTimeout(() => {
+                                    audioPlayer.currentTime = parseFloat(savedTime);
+                                    if (savedIsPlaying === 'true') {
+                                        playTrack();
+                                    }
+                                }, 100);
                             }
                         }
                     }
+                    
                     return true;
                 } catch (error) {
                     console.error('Error loading playlist:', error);
@@ -1455,6 +1883,17 @@
                             <i class="ri-music-line"></i>
                         </div>
                     `;
+                }
+                
+                // Start or stop text scrolling animation based on text length
+                const trackNameWidth = trackName.scrollWidth;
+                const containerWidth = trackName.parentElement.clientWidth;
+                
+                if (trackNameWidth > containerWidth) {
+                    trackName.style.animation = 'scrollText 10s linear infinite';
+                } else {
+                    trackName.style.animation = 'none';
+                    trackName.style.transform = 'translateX(0)';
                 }
             }
 
@@ -1546,33 +1985,40 @@
                         artist
                     };
                     
-                    // Save track to storage
-                    const savedTrack = await saveTrackToStorage(updatedTrack);
-                    if (!savedTrack) {
-                        showNotification('Ошибка при сохранении трека', 'error');
-                        return;
-                    }
-                    
-                    if (newTrackBeingEdited) {
+                    // If this is a new track with audio file, upload to Yandex Disk
+                    if (newTrackBeingEdited && newTrackBeingEdited.audioFile) {
+                        const savedTrack = await saveTrackToYandex(updatedTrack, newTrackBeingEdited.audioFile);
+                        if (!savedTrack) {
+                            throw new Error('Failed to save track to Yandex Disk');
+                        }
+                        
+                        // Get download URL for the audio
+                        const audioUrl = await getYandexFileDownloadUrl(savedTrack.yandexPath);
+                        if (!audioUrl) {
+                            throw new Error('Failed to get audio URL');
+                        }
+                        
+                        savedTrack.audio = audioUrl;
+                        
                         // Add new track to playlist
                         playlist.push(savedTrack);
                         currentTrackIndex = playlist.length - 1;
                         currentTrack = {...savedTrack};
                         
-                        // Create blob URL for audio if available
-                        if (currentTrack.audioBlob) {
-                            currentTrack.audio = URL.createObjectURL(currentTrack.audioBlob);
-                        }
-                        
                         audioPlayer.src = currentTrack.audio || '';
                         
                         // Play the new track
                         playTrack();
-                    } else {
+                    } else if (!newTrackBeingEdited) {
                         // Update existing track
-                        currentTrack = savedTrack;
+                        currentTrack = updatedTrack;
                         if (currentTrackIndex !== -1) {
-                            playlist[currentTrackIndex] = {...savedTrack};
+                            playlist[currentTrackIndex] = {...updatedTrack};
+                            
+                            // If track is on Yandex Disk, update metadata there
+                            if (currentTrack.yandexPath) {
+                                await saveTrackToYandex(updatedTrack, null);
+                            }
                         }
                     }
                     
@@ -1588,7 +2034,7 @@
                     newTrackBeingEdited = null;
                 } catch (error) {
                     console.error('Error saving track:', error);
-                    showNotification('Ошибка при сохранении трека', 'error');
+                    showNotification('Ошибка при сохранении трека: ' + error.message, 'error');
                 }
             });
 
@@ -1661,14 +2107,16 @@
                 document.querySelectorAll('.playlist-remove-btn').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
                         const index = e.currentTarget.dataset.index;
-                        const trackId = playlist[index].id;
+                        const track = playlist[index];
                         
                         try {
+                            // Remove from Yandex Disk if it's there
+                            if (track.yandexPath) {
+                                await removeTrackFromYandex(track);
+                            }
+                            
                             // Remove from playlist
                             playlist.splice(index, 1);
-                            
-                            // Remove from storage
-                            await removeTrackFromStorage(trackId);
                             
                             if (currentTrackIndex === index) {
                                 currentTrack = {
