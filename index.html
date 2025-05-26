@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Друзья и Музыка</title>
+    <title>Друзьшки</title>
     <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -252,8 +252,7 @@
             font-size: 18px;
             text-transform: uppercase;
         }
-        
-        /* Music Player Styles */
+
         .music-player {
             width: 350px;
             background: rgba(26, 26, 26, 0.7);
@@ -424,7 +423,6 @@
             white-space: nowrap;
         }
         
-        /* Volume control */
         .volume-container {
             position: relative;
         }
@@ -468,7 +466,6 @@
             cursor: pointer;
         }
         
-        /* Playlist modal styles */
         .playlist-modal {
             position: fixed;
             top: 0;
@@ -623,7 +620,6 @@
             background: rgba(77, 0, 153, 0.5);
         }
         
-        /* Editor modal styles */
         .editor-modal {
             position: fixed;
             top: 0;
@@ -810,7 +806,6 @@
             display: none;
         }
         
-        /* Notification styles */
         .notification {
             position: fixed;
             bottom: 20px;
@@ -844,7 +839,6 @@
             opacity: 1;
         }
         
-        /* Yandex Disk auth modal */
         .auth-modal {
             position: fixed;
             top: 0;
@@ -904,7 +898,6 @@
             background: rgba(77, 0, 153, 0.9);
         }
         
-        /* Admin panel styles */
         .admin-modal {
             position: fixed;
             top: 0;
@@ -1028,7 +1021,6 @@
             background: rgba(77, 0, 153, 0.9);
         }
         
-        /* Admin button */
         .admin-button {
             position: fixed;
             bottom: 20px;
@@ -1299,8 +1291,7 @@
             });
             
             // Yandex Disk API integration
-            // Замените на ваш реальный Client ID из Яндекс.OAuth
-            const YANDEX_CLIENT_ID = '1c5b3ec49d9145059e2c8b8739087f4b'; 
+            const YANDEX_CLIENT_ID = '1c5b3ec49d9145059e2c8b8739087f4b';
             const YANDEX_REDIRECT_URI = window.location.origin + window.location.pathname;
             const YANDEX_AUTH_URL = `https://oauth.yandex.ru/authorize?response_type=token&client_id=${YANDEX_CLIENT_ID}&redirect_uri=${encodeURIComponent(YANDEX_REDIRECT_URI)}`;
             
@@ -1325,7 +1316,7 @@
                     
                     showNotification('Успешная авторизация Яндекс.Диск', 'success');
                     
-                    // Загружаем треки после успешной авторизации
+                    // Load tracks after successful auth
                     loadPlaylistFromStorage();
                     
                     return true;
@@ -1335,20 +1326,20 @@
             
             // Initialize Yandex auth
             function initYandexAuth() {
-                // Проверяем токен в URL (если пользователь вернулся после авторизации)
+                // Check token in URL (if user returned after auth)
                 if (checkForTokenInUrl()) {
                     return;
                 }
                 
-                // Если токен уже есть в localStorage, просто используем его
+                // If token already in localStorage, just use it
                 if (yandexToken) {
                     authModal.classList.remove('active');
                     return;
                 }
                 
-                // Настраиваем кнопку авторизации
+                // Setup auth button
                 yandexAuthBtn.addEventListener('click', () => {
-                    // Перенаправляем пользователя на страницу авторизации Яндекс
+                    // Redirect user to Yandex auth page
                     window.location.href = YANDEX_AUTH_URL;
                 });
             }
@@ -1372,7 +1363,7 @@
                     });
                     
                     if (!folderResponse.ok && folderResponse.status !== 409) { // 409 = folder already exists
-                        throw new Error('Failed to create folder');
+                        throw new Error('Не удалось создать папку');
                     }
                     
                     // 2. Get upload URL
@@ -1384,7 +1375,7 @@
                     });
                     
                     if (!uploadUrlResponse.ok) {
-                        throw new Error('Failed to get upload URL');
+                        throw new Error('Не удалось получить URL для загрузки');
                     }
                     
                     const uploadData = await uploadUrlResponse.json();
@@ -1396,7 +1387,7 @@
                     });
                     
                     if (!uploadResponse.ok) {
-                        throw new Error('File upload failed');
+                        throw new Error('Ошибка загрузки файла');
                     }
                     
                     // 4. Save metadata
@@ -1415,7 +1406,7 @@
                     });
                     
                     if (!metadataResponse.ok) {
-                        throw new Error('Metadata update failed');
+                        throw new Error('Ошибка сохранения метаданных');
                     }
                     
                     // Return file info
@@ -1427,7 +1418,7 @@
                         metadata: metadata
                     };
                 } catch (error) {
-                    console.error('Yandex Disk upload error:', error);
+                    console.error('Ошибка загрузки на Яндекс.Диск:', error);
                     showNotification('Ошибка загрузки на Яндекс.Диск: ' + error.message, 'error');
                     return null;
                 }
@@ -1446,7 +1437,7 @@
                     });
                     
                     if (!response.ok) {
-                        throw new Error('Failed to get files list');
+                        throw new Error('Не удалось получить список файлов');
                     }
                     
                     const data = await response.json();
@@ -1482,13 +1473,13 @@
                                 }
                             }
                         } catch (error) {
-                            console.error('Error getting metadata for file:', file.name, error);
+                            console.error('Ошибка получения метаданных для файла:', file.name, error);
                         }
                     }
                     
                     return tracks;
                 } catch (error) {
-                    console.error('Yandex Disk files fetch error:', error);
+                    console.error('Ошибка получения файлов с Яндекс.Диск:', error);
                     showNotification('Ошибка получения файлов с Яндекс.Диск', 'error');
                     return [];
                 }
@@ -1507,21 +1498,19 @@
                     });
                     
                     if (!response.ok) {
-                        throw new Error('Failed to get download URL');
+                        throw new Error('Не удалось получить URL для скачивания');
                     }
                     
                     const data = await response.json();
                     return data.href;
                 } catch (error) {
-                    console.error('Error getting download URL:', error);
+                    console.error('Ошибка получения URL для скачивания:', error);
                     return null;
                 }
             }
             
             // Initialize Yandex auth
             initYandexAuth();
-            
-            // Friends list functionality
             const friendsButton = document.getElementById('friendsButton');
             const friendsList = document.getElementById('friendsList');
             const arrowIcon = document.getElementById('arrowIcon');
