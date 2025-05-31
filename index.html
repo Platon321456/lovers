@@ -1129,12 +1129,10 @@
         </div>
     </div>
 
-    <!-- Admin button -->
     <div class="admin-button" id="adminButton">
         <i class="ri-admin-line"></i>
     </div>
 
-    <!-- Admin panel modal -->
     <div class="admin-modal" id="adminModal">
         <div class="admin-content">
             <div class="admin-title">
@@ -1166,7 +1164,7 @@
             <i class="ri-close-line playlist-close" id="playlistClose"></i>
             
             <div id="playlistItems">
-                <!-- Playlist items will be added here -->
+
             </div>
             
             <button class="playlist-add-btn" id="playlistAddBtn">
@@ -1239,7 +1237,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Notification system
+
             const notification = document.getElementById('notification');
             const notificationMessage = document.getElementById('notificationMessage');
             
@@ -1254,7 +1252,7 @@
                 }, duration);
             }
             
-            // Admin panel functionality
+
             const adminButton = document.getElementById('adminButton');
             const adminModal = document.getElementById('adminModal');
             const adminClose = document.getElementById('adminClose');
@@ -1290,7 +1288,7 @@
                 }
             });
             
-            // Yandex Disk API integration
+
             const YANDEX_CLIENT_ID = '1c5b3ec49d9145059e2c8b8739087f4b';
             const YANDEX_REDIRECT_URI = window.location.origin + window.location.pathname;
             const YANDEX_AUTH_URL = `https://oauth.yandex.ru/authorize?response_type=token&client_id=${YANDEX_CLIENT_ID}&redirect_uri=${encodeURIComponent(YANDEX_REDIRECT_URI)}`;
@@ -1298,7 +1296,7 @@
             let yandexToken = localStorage.getItem('yandexToken');
             const yandexAuthBtn = document.getElementById('yandexAuthBtn');
             
-            // Check for token in URL (after OAuth redirect)
+
             function checkForTokenInUrl() {
                 const hash = window.location.hash.substring(1);
                 const params = new URLSearchParams(hash);
@@ -1308,15 +1306,15 @@
                     yandexToken = token;
                     localStorage.setItem('yandexToken', token);
                     
-                    // Clean URL
+
                     window.history.replaceState({}, document.title, window.location.pathname);
                     
-                    // Hide auth modal
+
                     authModal.classList.remove('active');
                     
                     showNotification('Успешная авторизация Яндекс.Диск', 'success');
                     
-                    // Load tracks after successful auth
+
                     loadPlaylistFromStorage();
                     
                     return true;
@@ -1324,27 +1322,23 @@
                 return false;
             }
             
-            // Initialize Yandex auth
             function initYandexAuth() {
-                // Check token in URL (if user returned after auth)
+
                 if (checkForTokenInUrl()) {
                     return;
                 }
                 
-                // If token already in localStorage, just use it
                 if (yandexToken) {
                     authModal.classList.remove('active');
                     return;
                 }
                 
-                // Setup auth button
                 yandexAuthBtn.addEventListener('click', () => {
-                    // Redirect user to Yandex auth page
+
                     window.location.href = YANDEX_AUTH_URL;
                 });
             }
             
-            // Yandex Disk API functions
             async function uploadToYandexDisk(file, metadata) {
                 if (!yandexToken) {
                     showNotification('Необходима авторизация Яндекс.Диск', 'error');
@@ -1353,7 +1347,7 @@
                 }
                 
                 try {
-                    // 1. Create folder for music if not exists
+
                     const folderResponse = await fetch('https://cloud-api.yandex.net/v1/disk/resources?path=/MusicPlayer', {
                         method: 'PUT',
                         headers: {
@@ -1366,7 +1360,7 @@
                         throw new Error('Не удалось создать папку');
                     }
                     
-                    // 2. Get upload URL
+
                     const fileName = `${metadata.id}_${file.name}`;
                     const uploadUrlResponse = await fetch(`https://cloud-api.yandex.net/v1/disk/resources/upload?path=/MusicPlayer/${encodeURIComponent(fileName)}&overwrite=true`, {
                         headers: {
@@ -1380,7 +1374,7 @@
                     
                     const uploadData = await uploadUrlResponse.json();
                     
-                    // 3. Upload file
+
                     const uploadResponse = await fetch(uploadData.href, {
                         method: 'PUT',
                         body: file
@@ -1390,7 +1384,7 @@
                         throw new Error('Ошибка загрузки файла');
                     }
                     
-                    // 4. Save metadata
+
                     const metadataResponse = await fetch('https://cloud-api.yandex.net/v1/disk/resources', {
                         method: 'PATCH',
                         headers: {
@@ -1409,7 +1403,7 @@
                         throw new Error('Ошибка сохранения метаданных');
                     }
                     
-                    // Return file info
+
                     return {
                         id: metadata.id,
                         name: fileName,
@@ -1446,12 +1440,12 @@
                         return [];
                     }
                     
-                    // Filter for music files and get metadata
+
                     const musicFiles = data._embedded.items.filter(item => 
                         item.mime_type && item.mime_type.startsWith('audio/')
                     );
                     
-                    // Get metadata for each file
+
                     const tracks = [];
                     for (const file of musicFiles) {
                         try {
@@ -1509,7 +1503,7 @@
                 }
             }
             
-            // Initialize Yandex auth
+
             initYandexAuth();
             const friendsButton = document.getElementById('friendsButton');
             const friendsList = document.getElementById('friendsList');
